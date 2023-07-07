@@ -1,0 +1,57 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# nscore
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+The goal of nscore is to ...
+
+## Installation
+
+You can install the development version of nscore like so:
+
+``` r
+remotes::install_github("probaverse/nscore")
+```
+
+## Example
+
+Consider a numeric vector:
+
+```{r}
+library(nscore)
+x <- c(0.3, 0.56, NA, 0.1, -12)
+```
+
+Uniform scores:
+
+```{r}
+uscore(x)
+```
+
+Normal scores:
+
+```{r}
+nscore(x)
+```
+
+Empirical return periods:
+
+```{r}
+rpscore(x)
+```
+
