@@ -1,4 +1,4 @@
-Package: nscore
+Package: uscore
 Type: Package
 Title: Computes empirical rank-based scores
 Version: 0.1.0

@@ -1,19 +1,19 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# nscore
+# uscore
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of nscore is to …
+The goal of uscore is to …
 
 ## Installation
 
-You can install the development version of nscore like so:
+You can install the development version of uscore like so:
 
 ``` r
-remotes::install_github("probaverse/nscore")
+remotes::install_github("probaverse/uscore")
 ```
 
 ## Example
@@ -21,7 +21,7 @@ remotes::install_github("probaverse/nscore")
 Consider a numeric vector:
 
 ``` r
-library(nscore)
+library(uscore)
 x <- c(0.3, 0.56, NA, 0.1, -12)
 ```
 
