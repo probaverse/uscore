@@ -4,9 +4,17 @@
 # uscore
 
 <!-- badges: start -->
+
+[![Codecov test
+coverage](https://codecov.io/gh/probaverse/uscore/branch/main/graph/badge.svg)](https://app.codecov.io/gh/probaverse/uscore?branch=main)
 <!-- badges: end -->
 
-The goal of uscore is to …
+The goal of uscore is to calculate empirical-based scores from data.
+
+- `uscore()` essentially fits data so they are equally spaced between 0
+  and 1.
+- `nscore()` spaces data along a standard Normal distribution.
+- `rpscore()` calculates empirical return periods.
 
 ## Installation
 
