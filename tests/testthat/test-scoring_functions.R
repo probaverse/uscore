@@ -8,7 +8,7 @@ test_that("uscore calculates properly", {
 
 test_that("nscore calculates properly", {
   x <- 1:4
-  expect_equal(nscore(x, a = 0), qnorm(1:4 / 5))
+  expect_equal(nscore(x, a = 0), stats::qnorm(1:4 / 5))
 })
 
 test_that("rpscore calculates properly", {

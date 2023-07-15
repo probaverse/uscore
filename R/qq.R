@@ -1,27 +1,36 @@
-#' Quantile-Quantile Points
+#' QQ and PP pairs
 #'
-#' Evaluates quantiles on a grid of uniform scores.
+#' Pairs quantiles (`qqpoints()`) and non-exceedance probabilities
+#' (`pppairs()`)
+#' on a grid of uniform scores, for the production of QQ and PP plots.
 #'
 #' @param x,y Numeric vectors or (univariate) probability distributions (of
 #' class `"dst"`); when `data` is specified, these objects will be searched
 #' for in the data first.
 #' @param data Optional data frame specifying where to look for the `x` and `y`
 #' objects.
-#' @param ngrid Number of uniform scores to evaluate the quantiles at.
-#' Optional if `x` or `y` is numeric.
+#' @param ngrid Grid size to evaluate the pairs. Optional if `x` or `y` is
+#' numeric or a `"finite"` distribution, in which case the grid is
+#' made up of the discrete points. In the case of `pppairs()`, the grid
+#' of uniform scores is associated with `x`.
 #' @param a Uniform score adjustment value when determining non-exceedance
-#' probabilities associated with `x` or `y`, if numeric. Passed to `uscore()`.
+#' probabilities associated with `x` or `y`, if numeric; or, the grid
+#' of uniform scores if `ngrid` is supplied. Passed to `uscore()`.
 #' @param col_prefix Prefix for output column names.
-#' @return A tibble of paired quantiles, each row corresponding to a
-#' uniform score (non-exceedance probability).
-#' @note Code is a little hacky right now.
+#' @return A tibble of paired quantiles (`qqpairs()`) or
+#' non-exceedance probabilities (`pppairs()`), the first column associated with
+#' `x`, and the second with `y`.
 #' @examples
 #' set.seed(1)
-#' qqpoints(rnorm(10), rnorm(10))
-#' qqpoints(rnorm(10), dst_norm(0, 1))
-#' qqpoints(distionary::dst_t(5), distionary::dst_norm(0, 1), ngrid = 20)
+#' qqpairs(rnorm(10), rnorm(10))
+#' qqpairs(rnorm(10), distionary::dst_norm(0, 1))
+#' qqpairs(distionary::dst_t(5), distionary::dst_norm(0, 1), ngrid = 20)
+#' pppairs(rnorm(10), rnorm(10))
+#' pppairs(rnorm(10), distionary::dst_norm(0, 1))
+#' pppairs(distionary::dst_t(5), distionary::dst_norm(0, 1), ngrid = 20)
+#' @rdname PPQQ
 #' @export
-qqpoints <- function(x, y, data, ngrid, a = -0.5, col_prefix = "quantile") {
+qqpairs <- function(x, y, data, ngrid, a = -0.5, col_prefix = "quantile") {
   x <- rlang::enquo(x)
   y <- rlang::enquo(y)
   if (missing(data)) data <- NULL
@@ -51,14 +60,14 @@ qqpoints <- function(x, y, data, ngrid, a = -0.5, col_prefix = "quantile") {
     nx <- length(xs)
     if (nx == 0) {
       res <- as.data.frame(matrix(nrow = 0, ncol = 2))
-      res <- setNames(res, paste(col_prefix, c("x", "y"), sep = "_"))
+      res <- stats::setNames(res, paste(col_prefix, c("x", "y"), sep = "_"))
       if (requireNamespace("tibble", quietly = TRUE)) {
         res <- tibble::as_tibble(res)
       }
       return(res)
     }
-    qx <- approxfun(c(-Inf, uxs), c(xs[1], xs), method = "constant",
-                    f = 1, yright = xs[nx])
+    qx <- stats::approxfun(c(-Inf, uxs), c(xs[1], xs), method = "constant",
+                           f = 1, yright = xs[nx])
   } else {
     qx <- function(p) distionary::eval_quantile(x, at = p)
     if (distionary::is_finite_dst(x)) {
@@ -77,14 +86,14 @@ qqpoints <- function(x, y, data, ngrid, a = -0.5, col_prefix = "quantile") {
     ny <- length(ys)
     if (ny == 0) {
       res <- as.data.frame(matrix(nrow = 0, ncol = 2))
-      res <- setNames(res, paste(col_prefix, c("x", "y"), sep = "_"))
+      res <- stats::setNames(res, paste(col_prefix, c("x", "y"), sep = "_"))
       if (requireNamespace("tibble", quietly = TRUE)) {
         res <- tibble::as_tibble(res)
       }
       return(res)
     }
-    qy <- approxfun(c(-Inf, uys), c(ys[1], ys), method = "constant",
-                    f = 1, yright = ys[ny])
+    qy <- stats::approxfun(c(-Inf, uys), c(ys[1], ys), method = "constant",
+                           f = 1, yright = ys[ny])
   } else {
     qy <- function(p) distionary::eval_quantile(y, at = p)
     if (distionary::is_finite_dst(y)) {
@@ -101,7 +110,7 @@ qqpoints <- function(x, y, data, ngrid, a = -0.5, col_prefix = "quantile") {
     res <- data.frame(x = qx(tau), y = qy(tau))
     is_inf <- is.infinite(res[[1]]) | is.infinite(res[[2]])
     res <- res[!is_inf, , drop = FALSE]
-    res <- setNames(res, paste(col_prefix, c("x", "y"), sep = "_"))
+    res <- stats::setNames(res, paste(col_prefix, c("x", "y"), sep = "_"))
     res <- res[!duplicated(res), , drop = FALSE]
     rownames(res) <- NULL
     if (requireNamespace("tibble", quietly = TRUE)) {
@@ -128,7 +137,7 @@ qqpoints <- function(x, y, data, ngrid, a = -0.5, col_prefix = "quantile") {
   }
   res <- data.frame(x = c(qx_from_x, qx_from_y),
                     y = c(qy_from_x, qy_from_y))
-  res <- setNames(res, paste(col_prefix, c("x", "y"), sep = "_"))
+  res <- stats::setNames(res, paste(col_prefix, c("x", "y"), sep = "_"))
   is_inf <- is.infinite(res[[1]]) | is.infinite(res[[2]])
   res <- res[!is_inf, , drop = FALSE]
   res <- res[!duplicated(res), , drop = FALSE]

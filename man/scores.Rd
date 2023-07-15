@@ -6,11 +6,11 @@
 \alias{rpscore}
 \title{Rank-based Scores}
 \usage{
-uscore(x, a = -0.5, na.rm = FALSE)
+uscore(x, a = -0.5, na.rm = FALSE, ...)
 
-nscore(x, a = -0.5, na.rm = FALSE)
+nscore(x, a = -0.5, na.rm = FALSE, ...)
 
-rpscore(x, a = -0.5, na.rm = FALSE)
+rpscore(x, a = -0.5, na.rm = FALSE, ...)
 }
 \arguments{
 \item{x}{Numeric vector.}
@@ -19,6 +19,8 @@ rpscore(x, a = -0.5, na.rm = FALSE)
 
 \item{na.rm}{Logical indicating whether `NA` and `NaN` values should be
 removed from the output.}
+
+\item{...}{Other arguments to pass to the `rank()` function.}
 }
 \value{
 Vector of uniform scores.
