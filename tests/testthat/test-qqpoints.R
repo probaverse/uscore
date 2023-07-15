@@ -37,6 +37,15 @@ test_that("QQ points works with two numeric.", {
   expect_equal(res, check)
 })
 
+test_that("Duplicate data still works.", {
+  res <- as.data.frame(qqpoints(c(2, 2, 3), 1:4, a = 1.5))
+  check <- data.frame(
+    quantile_x = c(2, 2, 2, 3, 3),
+    quantile_y = c(1, 2, 3, 3, 4)
+  )
+  expect_equal(res, check)
+})
+
 test_that("QQ points errors out appropriately.", {
   expect_error(qqpoints(data.frame(x = 1), 4))
   expect_error(qqpoints(distionary::dst_norm(0, 1), data.frame(x = 1)))
@@ -55,7 +64,7 @@ test_that("QQ points works with two distributions.", {
   res <- as.data.frame(qqpoints(distionary::dst_norm(0, 1),
                                 distionary::dst_exp(1), ngrid = 5))
   u <- uscore(1:5)
-  check <- data.frame(quantile_x = stats::qnorm(u), quantile_y = qexp(u))
+  check <- data.frame(quantile_x = stats::qnorm(u), quantile_y = stats::qexp(u))
   expect_equal(res, check)
 })
 
@@ -76,5 +85,23 @@ test_that("Infinite quantiles are removed.", {
                                 ngrid = 5, a = -1))
   check <- data.frame(quantile_x = stats::qnorm(1:3 / 4),
                       quantile_y = 1:3 / 4)
+  expect_equal(res, check)
+})
+
+test_that("QQ knows what to do when finite distributions are supplied.", {
+  x <- distionary::dst_empirical(1:3, weights = c(0.1, 0.41, 0.49))
+  y <- c(1.5, 2, 3)
+  res <- as.data.frame(qqpoints(x, y))
+  check <- data.frame(
+    quantile_x = c(1,   2,   2, 2, 3),
+    quantile_y = c(1.5, 1.5, 2, 3, 3)
+  )
+  expect_equal(res, check)
+  y <- distionary::dst_norm(0, 1)
+  res <- as.data.frame(qqpoints(x, y))
+  check <- data.frame(
+    quantile_x = 1:2,
+    quantile_y = stats::qnorm(c(0.1, 0.51))
+  )
   expect_equal(res, check)
 })

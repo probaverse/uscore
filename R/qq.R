@@ -42,9 +42,12 @@ qqpoints <- function(x, y, data, ngrid, a = -0.5, col_prefix = "quantile") {
          class(y), ".")
   }
   if (x_is_num) {
-    ux <- uscore(x, a = a, na.rm = TRUE)
-    uxs <- sort(ux, na.last = NA)
+    ux <- uscore(x, a = a, na.rm = TRUE, ties.method = "max")
+    uxs <- sort(ux)
     xs <- sort(x, na.last = NA)
+    xdup <- duplicated(uxs)
+    uxs <- uxs[!xdup]
+    xs <- xs[!xdup]
     nx <- length(xs)
     if (nx == 0) {
       res <- as.data.frame(matrix(nrow = 0, ncol = 2))
@@ -57,7 +60,7 @@ qqpoints <- function(x, y, data, ngrid, a = -0.5, col_prefix = "quantile") {
     qx <- approxfun(c(-Inf, uxs), c(xs[1], xs), method = "constant",
                     f = 1, yright = xs[nx])
   } else {
-    qx <- function(p) eval_quantile(x, at = p)
+    qx <- function(p) distionary::eval_quantile(x, at = p)
     if (distionary::is_finite_dst(x)) {
       px <- x$probabilities$size
       uxs <- cumsum(px)
@@ -65,9 +68,12 @@ qqpoints <- function(x, y, data, ngrid, a = -0.5, col_prefix = "quantile") {
     }
   }
   if (y_is_num) {
-    uy <- uscore(y, a = a, na.rm = TRUE)
-    uys <- sort(uy, na.last = NA)
+    uy <- uscore(y, a = a, na.rm = TRUE, ties.method = "max")
+    uys <- sort(uy)
     ys <- sort(y, na.last = NA)
+    ydup <- duplicated(uys)
+    uys <- uys[!ydup]
+    ys <- ys[!ydup]
     ny <- length(ys)
     if (ny == 0) {
       res <- as.data.frame(matrix(nrow = 0, ncol = 2))
@@ -80,7 +86,7 @@ qqpoints <- function(x, y, data, ngrid, a = -0.5, col_prefix = "quantile") {
     qy <- approxfun(c(-Inf, uys), c(ys[1], ys), method = "constant",
                     f = 1, yright = ys[ny])
   } else {
-    qy <- function(p) eval_quantile(y, at = p)
+    qy <- function(p) distionary::eval_quantile(y, at = p)
     if (distionary::is_finite_dst(y)) {
       py <- y$probabilities$size
       uys <- cumsum(py)
@@ -103,7 +109,7 @@ qqpoints <- function(x, y, data, ngrid, a = -0.5, col_prefix = "quantile") {
     }
     return(res)
   }
-  if (x_is_dst && y_is_dst) {
+  if (length(uxs) + length(uys) == 0) {
     stop("Must specify `ngrid` when inputting two distributions.")
   }
   if (length(uxs)) {

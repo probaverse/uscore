@@ -11,6 +11,7 @@
 #' @param a Single numeric; adjustment value for uniform scores. See Details.
 #' @param na.rm Logical indicating whether `NA` and `NaN` values should be
 #' removed from the output.
+#' @param ... Other arguments to pass to the `rank()` function.
 #' @details Uniform scores are calculated by `(rank+a)/(n+1+2*a)`,
 #' where `rank` is the ranked `x` values.
 #' @return Vector of uniform scores.
@@ -24,22 +25,22 @@
 #'
 #' @export
 #' @rdname scores
-uscore <- function(x, a = -0.5, na.rm = FALSE) {
+uscore <- function(x, a = -0.5, na.rm = FALSE, ...) {
   if (na.rm) x <- x[!is.na(x)]
   nr <- sum(!is.na(x))
   us <- (seq_len(nr) + a) / (nr + 1 + 2 * a)
-  jj <- rank(x, na.last = "keep")
+  jj <- rank(x, na.last = "keep", ...)
   us[jj]
 }
 
 #' @export
 #' @rdname scores
-nscore <- function(x, a = -0.5, na.rm = FALSE) {
-  stats::qnorm(uscore(x, a = a, na.rm = na.rm))
+nscore <- function(x, a = -0.5, na.rm = FALSE, ...) {
+  stats::qnorm(uscore(x, a = a, na.rm = na.rm, ...))
 }
 
 #' @export
 #' @rdname scores
-rpscore <- function(x, a = -0.5, na.rm = FALSE) {
-  1 / (1 - uscore(x, a = a, na.rm = na.rm))
+rpscore <- function(x, a = -0.5, na.rm = FALSE, ...) {
+  1 / (1 - uscore(x, a = a, na.rm = na.rm, ...))
 }
