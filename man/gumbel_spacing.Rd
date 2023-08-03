@@ -4,6 +4,7 @@
 \alias{scale_x_gumbelRP}
 \alias{scale_y_gumbelRP}
 \alias{scale_x_gumbelAEP}
+\alias{scale_y_gumbelAEP}
 \title{Gumbel-transformed axes}
 \usage{
 scale_x_gumbelRP(
@@ -17,6 +18,11 @@ scale_y_gumbelRP(
 )
 
 scale_x_gumbelAEP(
+  ...,
+  minor_breaks = unlist(lapply(10^(-10:10), function(x) x * 1:10))
+)
+
+scale_y_gumbelAEP(
   ...,
   minor_breaks = unlist(lapply(10^(-10:10), function(x) x * 1:10))
 )

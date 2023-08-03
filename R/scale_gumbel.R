@@ -54,6 +54,8 @@ scale_x_gumbelAEP <- function(..., minor_breaks = unlist(lapply(10^(-10:10), fun
     trans = gumbelAEP_trans)
 }
 
+#' @rdname gumbel_spacing
+#' @export
 scale_y_gumbelAEP <- function(..., minor_breaks = unlist(lapply(10^(-10:10), function(x) x * 1:10))) {
   ggplot2::scale_y_continuous(
     ...,
