@@ -9,6 +9,8 @@
 coverage](https://codecov.io/gh/probaverse/uscore/branch/main/graph/badge.svg)](https://app.codecov.io/gh/probaverse/uscore?branch=main)
 <!-- badges: end -->
 
+**This package is being phased out and replaced by [gristmill](https://github.com/probaverse/gristmill)**
+
 The goal of uscore is to calculate empirical-based scores from data.
 
 - `uscore()` essentially fits data so they are equally spaced between 0
